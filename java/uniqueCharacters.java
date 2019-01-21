@@ -24,18 +24,14 @@ public class main {
         int stringLength = input.length();
         ArrayList<Character> characters = new ArrayList<Character>();
 
-        for(char c : input.toCharArray()){
-            if(characters.size() == 0){
-                characters.add(c);
-            }else {
-                for (int i = 0; i < characters.size(); i++) {
-                    if (c == characters.get(i)) {
-                        System.out.println("False");
-                        return;
-                    }
+        for(char c : input.toCharArray()){ 
+            for (int i = 0; i < characters.size(); i++) {
+                if (c == characters.get(i)) {
+                    System.out.println("False");
+                    return;
                 }
-                characters.add(c);
             }
+          	characters.add(c);
         }
         System.out.println("True");
         return;
