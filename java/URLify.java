@@ -1,7 +1,7 @@
 import java.math.BigInteger;
 import java.util.*;
 
-public class main {
+public class URLify {
 
     //given a string, URLify the string by changing spaces
     //to %20, the challenge requested to use an array if using Java.

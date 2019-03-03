@@ -1,6 +1,6 @@
 public class main {
 
-    public static void main(String[] args){
+    public static void findDifferenceOfSums(String[] args){
         int sumOfSquares = 0;
         int squareOfSum = 0;
         sumOfSquares = getSumOfSquares();
