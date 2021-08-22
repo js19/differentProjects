@@ -1,0 +1,142 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body{
+            background-color: #242429;
+            color:#fff;
+        }
+        #body-container{
+            width:700px;
+            margin:auto;
+        }
+        #body-container h1 {
+            width:445px;
+            margin:auto;
+        }
+        #button-container{
+            width:444px;
+            margin:auto;
+            margin-top:20px;
+        }
+        #button-container input{
+            width:372px;
+            border-radius: 5px;
+            border:none;
+            height:27px;
+            background-color: #3a3b43;
+            color:#fff;
+            padding-left:5px;
+        }
+        #button-container button{
+            width:68px;
+            height:28px;
+            border-radius: 5px;
+            border:none;
+            background-color:#00c600;
+            color:#fff;
+        }
+    
+        #item-container{
+            margin-top:20px;
+            background-color:#3a3b43;
+            border-radius: 5px;
+            border:solid #3a3b43;
+            padding: 0 10px 0 10px;
+        }
+        .item{
+            background-color: #3a3b43;
+            display:flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
+    </head>
+    <body>
+        <div id="body-container">
+            <h1>Welcome to Your Shopping List!</h1>
+            <div id="button-container">
+                <input id="input" placeholder="Item"/>
+                <button id="addButton">Add</button>
+            </div><!--end button container-->
+            <div id="item-container">
+            </div> <!--end item container-->
+        </div> <!--end body container-->
+        <script>
+        //use ajax, axios, xmlHttpRequest, etc 
+        //using xmlHttpRequest
+    
+        function get(){
+            var request = new XMLHttpRequest;
+            request.open("GET", "/get", true), request.setRequestHeader("content-type", "application/x-www-form-urlencoded"),
+            request.onreadystatechange = function(){
+                if(request.readyState == 4 && request.status == 200){
+                    if(request.responseText != "" || request.responseText != null){
+                        var itemsJson = JSON.parse(request.responseText);
+                        let itemContainer = document.getElementById("item-container");
+                        for(var i = 0; i < itemsJson.length; i++){
+                            item = createElements(itemsJson[i]["_id"], itemsJson[i]["name"]);
+                            itemContainer.append(item);
+                        }
+                    }
+                }
+            }, request.send();
+        }
+
+        function createElements(id, name){
+            var item = document.createElement('div');
+            item.classList.add("item");
+            item.id = id;
+            var pTag = document.createElement('p');
+            var newText = document.createTextNode(name);
+            var close = document.createElement('i');
+            (function(id){
+               close.onclick = function(){
+                    del(id);
+               }
+            })(id);   
+            close.classList.add("fa");
+            close.classList.add("fa-close");
+            close.style.cssText = 'font-size:20px; color:#c60000';
+            pTag.appendChild(newText);
+            item.appendChild(pTag);
+            item.appendChild(close);
+            return item;
+        }
+    
+        function add(){
+            var text = document.getElementById("input").value;
+            var request = new XMLHttpRequest;
+            request.open("GET", "/add?name="+text, !0), request.setRequestHeader("content-type", "application/x-www-form-urlencoded"),
+            request.onreadystatechange = function(){
+                if(request.readyState == 4 && request.status == 200){
+                    var itemsJson = JSON.parse(request.responseText);
+                    document.getElementById("input").value = '';
+                    let itemContainer = document.getElementById("item-container");
+                    var item = createElements(itemsJson["_id"], itemsJson["name"]);
+                    itemContainer.appendChild(item);
+                }
+            }, request.send(null);
+        }
+
+        function del(id){
+            var value = document.getElementById(id);
+            var request = new XMLHttpRequest;
+            request.open("GET", "/delete?id="+id, !0), request.setRequestHeader("content-type", "application/x-www-form-urlencoded"),
+            request.onreadystatechange = function(){
+                if(request.readyState == 4 && request.status == 200){
+                    var itemsJson = JSON.parse(request.responseText); 
+                    let itemContainer = document.getElementById("item-container");
+                   // var item = createElements(itemsJson["_id"], itemsJson["name"]);
+                    itemContainer.removeChild(value);
+                }
+            }, request.send(null);
+        }
+    
+        get();
+        var addButton = document.getElementById("addButton");
+        addButton.addEventListener("click", function(){
+            add()
+        });
+    
+        </script>
+    </body>
